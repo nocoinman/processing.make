@@ -1,5 +1,5 @@
 #
-# processing.make.extensions - template.make
+# processing.make.extensions - template.mk
 #
 # General information:
 # This template can be used to create a new extension a bit faster.
@@ -31,7 +31,7 @@
 
 NAME=template
 VERSION=0.0.2
-include $(BASE_DIR)processing.make.extensions/processing.make.extensions
+include $(BASE_DIR)/processing.make.extensions/processing.make.extensions
 
 define TEMPLATE_HELP_RULE
 	@echo "This is a simple template of a processing.make extension"
@@ -49,7 +49,7 @@ endef
 #
 .PHONY: $(NAME)_script $(NAME)_other_script novalid
 $(NAME)_script:
-	sh $(BASE_DIR)processing.make.extensions/template.sh
+	sh $(BASE_DIR)/processing.make.extensions/template.sh
 
 $(NAME)_other_script:
 	@echo "An other make script space."

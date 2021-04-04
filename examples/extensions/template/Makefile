@@ -5,8 +5,8 @@
 # This file is part of the processing.make project.
 #
 
-BASE_DIR=../../../
-include $(BASE_DIR)processing.make
+BASE_DIR=../../..
+include $(BASE_DIR)/processing.mk
 
 # include the extension
-include $(BASE_DIR)processing.make.extensions/template.make
+include $(BASE_DIR)/processing.make.extensions/template.mk

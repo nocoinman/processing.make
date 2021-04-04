@@ -1,5 +1,5 @@
 #
-# processing.make.extensions
+# processing.make.extensions.mk
 # 
 # Extensions base script.
 # Echo extension help content and extension version.
@@ -8,7 +8,7 @@
 # This file is part of the processing.make project.
 #
 
-.Phony: $(NAME)_help $(NAME)_version
+.PHONY: $(NAME)_help $(NAME)_version
 $(NAME)_help:
 	@echo "$(NAME) (version $(VERSION))\n"
 	$(call TEMPLATE_HELP_RULE)

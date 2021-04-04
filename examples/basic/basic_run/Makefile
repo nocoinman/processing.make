@@ -13,4 +13,4 @@
 #
 
 
-include ../../../processing.make
+include ../../../processing.mk

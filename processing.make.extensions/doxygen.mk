@@ -1,5 +1,5 @@
 #
-# processing.make.extensions - doxygen.make
+# processing.make.extensions - doxygen.mk
 #
 # This file is part of the processing.make project.
 #
@@ -7,7 +7,7 @@
 
 NAME=doxygen
 VERSION=0.0.1
-include $(BASE_DIR)processing.make.extensions/processing.make.extensions
+include $(BASE_DIR)/processing.make.extensions/processing.make.extensions
 
 define HELP_RULE
 	@echo "This extension use doxygen to generate a documentation"
