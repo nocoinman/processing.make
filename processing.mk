@@ -23,83 +23,89 @@
 #
 
 
-MAKEFILE_NAME = "processing.make"
-MAKEFILE_VERSION = "0.1.1"
+MAKEFILE_NAME = "processing.mk"
+MAKEFILE_VERSION = "0.2.0"
 
 
 # make shell executable
 SHELL=/bin/sh
 
+ifndef PJAVA
+	PJAVA = processing-java
+endif
 
 
 # Processing sketch and output default parameter
 # -----------------------------------------------------------------------------
 
 ifndef SKETCH_DIRECTORY
-SKETCH_DIRECTORY = ${CURDIR}
+	SKETCH_DIRECTORY = ${CURDIR}
 endif
 
 ifndef OUTPUT_FOLDERNAME
-OUTPUT_FOLDERNAME = build
+	OUTPUT_FOLDERNAME = build
 endif
 
 ifndef OUTPUT_DIRECTORY
-OUTPUT_DIRECTORY = $(SKETCH_DIRECTORY)/$(OUTPUT_FOLDERNAME)
+	OUTPUT_DIRECTORY = $(SKETCH_DIRECTORY)/$(OUTPUT_FOLDERNAME)
 endif
-
 
 
 # Processing export application default folder names
 # -----------------------------------------------------------------------------
 
 ifndef EXPORT_FOLDERNAME
-EXPORT_FOLDERNAME = export
+	EXPORT_FOLDERNAME = export
+endif
+
+ifndef EXPORT_DIRECTORY
+	EXPORT_DIRECTORY = $(SKETCH_DIRECTORY)/$(EXPORT_FOLDERNAME)
 endif
 
 ifndef EXPORT_LINUX_FOLDERNAME
-EXPORT_LINUX_FOLDERNAME = application.linux
+	EXPORT_LINUX_FOLDERNAME = application.linux
 endif
 ifndef EXPORT_LINUX32_FOLDERNAME
-EXPORT_LINUX32_FOLDERNAME = $(EXPORT_LINUX_FOLDERNAME)32
+	EXPORT_LINUX32_FOLDERNAME = $(EXPORT_LINUX_FOLDERNAME)32
 endif
 ifndef EXPORT_LINUX64_FOLDERNAME
-EXPORT_LINUX64_FOLDERNAME = $(EXPORT_LINUX_FOLDERNAME)64
+	EXPORT_LINUX64_FOLDERNAME = $(EXPORT_LINUX_FOLDERNAME)64
 endif
 
 ifndef EXPORT_MACOSX_FOLDERNAME
-EXPORT_MACOSX_FOLDERNAME = application.macosx
+	EXPORT_MACOSX_FOLDERNAME = application.macosx
 endif
 
 ifndef EXPORT_WINDOWS_FOLDERNAME
-EXPORT_WINDOWS_FOLDERNAME = windows
+	EXPORT_WINDOWS_FOLDERNAME = windows
 endif
 ifndef EXPORT_WINDOWS32_FOLDERNAME
-EXPORT_WINDOWS32_FOLDERNAME = $(EXPORT_WINDOWS_FOLDERNAME)32
+	EXPORT_WINDOWS32_FOLDERNAME = $(EXPORT_WINDOWS_FOLDERNAME)32
 endif
 ifndef EXPORT_WINDOWS64_FOLDERNAME
-EXPORT_WINDOWS64_FOLDERNAME = $(EXPORT_WINDOWS_FOLDERNAME)64
+	EXPORT_WINDOWS64_FOLDERNAME = $(EXPORT_WINDOWS_FOLDERNAME)64
 endif
 
 
+# Rules
+# -----------------------------------------------------------------------------
+
+define BUILD_RULE
+	$(PJAVA) --sketch=$(SKETCH_DIRECTORY) --output=$(OUTPUT_DIRECTORY) --force --${1}
+endef
+
+define EXPORT_RULE
+	$(PJAVA) \
+	--sketch=$(SKETCH_DIRECTORY) \
+	--output=$(EXPORT_DIRECTORY)/${1} \
+	--force \
+	--export \
+	--platform=${2} ${3}
+endef
 
 define CLEAN_RULE
 	@echo "Delete '${1}' directory"
 	$(shell rm -rf ${1})
-endef
-
-
-define BUILD_RULE
-	processing-java --sketch=$(SKETCH_DIRECTORY) --output=$(OUTPUT_DIRECTORY) --${1} --force
-endef
-
-
-define EXPORT_RULE
-	processing-java \
-	--sketch=$(SKETCH_DIRECTORY) \
-	--output=$(SKETCH_DIRECTORY)/$(EXPORT_FOLDERNAME)/${1} \
-	--export \
-	--platform=${2} ${3} \
-	--force
 endef
 
 
@@ -147,15 +153,13 @@ exportWin64:
 # -----------------------------------------------------------------------------
 
 .PHONY: clean cleanOutput cleanExport
-clean:
-	$(call CLEAN_RULE, $(OUTPUT_DIRECTORY))
-	$(call CLEAN_RULE, $(SKETCH_DIRECTORY)/$(EXPORT_FOLDERNAME))
+clean: cleanOutput cleanExport
 
 cleanOutput:
 	$(call CLEAN_RULE, $(OUTPUT_DIRECTORY))
 
 cleanExport:
-	$(call CLEAN_RULE, $(SKETCH_DIRECTORY)/$(EXPORT_FOLDERNAME))
+	$(call CLEAN_RULE, $(EXPORT_DIRECTORY))
 
 
 # The help and version flags
@@ -165,7 +169,7 @@ cleanExport:
 help:
 	@echo $(MAKEFILE_NAME)" v."$(MAKEFILE_VERSION)
 	@echo ""
-	@echo "Usage:"
+	@echo "USAGE"
 	@echo "    make                   Same as 'make run' command."
 	@echo "    make run               Preprocess, compile, and run a sketch."
 	@echo "    make present           Preprocess, compile, and run a sketch full screen."
@@ -184,16 +188,18 @@ help:
 	@echo "    make help              Show this help text."
 	@echo "    make version           Get the Version of the $(MAKEFILE_NAME)."
 	@echo ""
-	@echo "Current Parameter:"
-	@echo "    SKETCH_DIRECTORY              = $(SKETCH_DIRECTORY)"
-	@echo "    OUTPUT_FOLDERNAME             = $(OUTPUT_FOLDERNAME)"
-	@echo "    OUTPUT_DIRECTORY              = $(OUTPUT_DIRECTORY)"
-	@echo "    EXPORT_FOLDERNAME             = $(EXPORT_FOLDERNAME)"
-	@echo "    EXPORT_LINUX32_FOLDERNAME     = $(EXPORT_LINUX32_FOLDERNAME)"
-	@echo "    EXPORT_LINUX64_FOLDERNAME     = $(EXPORT_LINUX64_FOLDERNAME)"
-	@echo "    EXPORT_MACOSX_FOLDERNAME      = $(EXPORT_MACOSX_FOLDERNAME)"
-	@echo "    EXPORT_WINDOWS32_FOLDERNAME   = $(EXPORT_WINDOWS32_FOLDERNAME)"
-	@echo "    EXPORT_WINDOWS64_FOLDERNAME   = $(EXPORT_WINDOWS64_FOLDERNAME)"
+	@echo "PARAMETERS"
+	@echo " * PJAVA                         = $(PJAVA)"
+	@echo " * SKETCH_DIRECTORY              = $(SKETCH_DIRECTORY)"
+	@echo " * OUTPUT_FOLDERNAME             = $(OUTPUT_FOLDERNAME)"
+	@echo " * OUTPUT_DIRECTORY              = $(OUTPUT_DIRECTORY)"
+	@echo " * EXPORT_FOLDERNAME             = $(EXPORT_FOLDERNAME)"
+	@echo " * EXPORT_DIRECTORY              = $(EXPORT_DIRECTORY)"
+	@echo " * EXPORT_LINUX32_FOLDERNAME     = $(EXPORT_LINUX32_FOLDERNAME)"
+	@echo " * EXPORT_LINUX64_FOLDERNAME     = $(EXPORT_LINUX64_FOLDERNAME)"
+	@echo " * EXPORT_MACOSX_FOLDERNAME      = $(EXPORT_MACOSX_FOLDERNAME)"
+	@echo " * EXPORT_WINDOWS32_FOLDERNAME   = $(EXPORT_WINDOWS32_FOLDERNAME)"
+	@echo " * EXPORT_WINDOWS64_FOLDERNAME   = $(EXPORT_WINDOWS64_FOLDERNAME)"
 
 version:
 	@echo $(MAKEFILE_VERSION)
