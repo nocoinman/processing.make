@@ -178,7 +178,7 @@ help:
 	@echo "    make export            Export as Linux, MacOS and Windows application."
 	@echo "    make exportLinux       Export as Linux application."
 	@echo "    make exportLinux32     Export as Linux 32-bit application."
-	@echo "    make exportLinux32     Export as Linux 64-bit application."
+	@echo "    make exportLinux64     Export as Linux 64-bit application."
 	@echo "    make exportMac         Export as MacOS application."
 	@echo "    make exportWin         Export as Windows application."
 	@echo "    make exportWin32       Export as Windows 32-bit application."
